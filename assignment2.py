@@ -4,7 +4,6 @@ def main():
     
     num = roll()
     
-    
     while True:
         try:
             run = int(input( "guess the number (between 1 and 10)\n " ))
