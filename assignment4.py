@@ -104,12 +104,15 @@ def chest(rooms, items, inventory, current_room, room_count):
             break
         elif ans == "c":
             get_item(rooms, items, inventory, current_room, room_count)
-            ans = input("Do you want to go through the door.[y/n]:")
-            if ans == "y":
-                current_room = change_room(rooms, items, inventory, current_room, room_count)
-                break
-            elif ans != "n":
-                print("You must type y or n.")
+            while True:
+                ans = input("Do you want to go through the door.[y/n]:")
+                if ans == "y":
+                    current_room = change_room(rooms, items, inventory, current_room, room_count)
+                    break
+                elif ans == "n":
+                    print("You plan on staying here till you starve?.")
+                else:
+                    print("You must type y or n.")
         else:
             print("You must type d or c.")    
                 
