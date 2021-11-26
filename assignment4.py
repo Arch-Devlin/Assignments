@@ -34,17 +34,9 @@ def change_room(rooms, items, inventory, current_room, room_count):
     enter(rooms, items, inventory, current_room, room_count)
 
 def get_item(rooms, items, inventory, current_room, room_count):
-
-    trap = random.randint(1, 100)
-
-    if trap == 1:
-        print("The chest was trapped. A green gass fills the air and enters your lungs. You look to the door you'll never enter as you fall gasping for your last breath.")
-        leave(rooms, items, inventory, current_room, room_count)
-    elif trap == 100:
-        print("The chest had two items")
-        item = random.choice(items)
-        inventory[item] = inventory[item] + 1
+    
     item = random.choice(items)
+    print(f"You got a {item}.")
     inventory[item] = inventory[item] + 1
 
 def filler(rooms, items, inventory, current_room, room_count):
@@ -103,7 +95,17 @@ def chest(rooms, items, inventory, current_room, room_count):
             current_room = change_room(rooms, items, inventory, current_room, room_count)
             break
         elif ans == "c":
+            trap = random.randint(1, 100)
+
+            if trap == 1:
+                print("The chest was trapped. A green gass fills the air and enters your lungs. You look to the door you'll never enter as you fall gasping for your last breath.")
+                leave(rooms, items, inventory, current_room, room_count)
+            elif trap == 100:
+                print("The chest had two items")
+                get_item(rooms, items, inventory, current_room, room_count)
+            
             get_item(rooms, items, inventory, current_room, room_count)
+            
             while True:
                 ans = input("Do you want to go through the door.[y/n]:")
                 if ans == "y":
@@ -137,12 +139,15 @@ def monster(rooms, items, inventory, current_room, room_count):
     if int(inventory["Rusty Sword"]) == 0 and int(inventory["Rusty Armour"]) == 0:
         print("The monster reaches across and grabs you in its hand. Your brief life flashes before your eyes as you look into the creatures gaping jaw closing on your head.")
         leave(rooms, items, inventory, current_room, room_count)
+    
     elif int(inventory["Rusty Sword"]) != 0 and int(inventory["Rusty Armour"]) != 0:
+        
         while True:
             option = input("Would you like to fight the monster or make a run for the door. [f/d]:")
             if option == "f":
                 inventory["Rusty Sword"] = inventory["Rusty Sword"] - 1
                 print("Your trusty rusty sword betrays you , breaking on first contact with the monster. Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
+                
                 while True:
                     ans = input("Do you want to go through the door.[y/n]:")
                     if ans == "y":
@@ -156,10 +161,12 @@ def monster(rooms, items, inventory, current_room, room_count):
                 current_room = change_room(rooms, items, inventory, current_room, room_count)
             else:
                 print("You must type f or d.")
+    
     elif int(inventory["Rusty Sword"]) != 0 and int(inventory["Rusty Armour"]) == 0:
         print("You can use your sword to fight the monster")
         inventory["Rusty Sword"] = inventory["Rusty Sword"] - 1
         print("Your trusty rusty sword betrays you , breaking on first contact with the monster. Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
+        
         while True:
             ans = input("Do you want to go through the door.[y/n]:")
             if ans == "y":
@@ -167,8 +174,9 @@ def monster(rooms, items, inventory, current_room, room_count):
                 break
             elif ans == "n":
                 print("Why, what are you planing on in here?. The monster isn't dead you know.")
-            else:
+            else:             
                 print("You must type y or n.")
+    
     elif int(inventory["Rusty Sword"]) == 0 and int(inventory["Rusty Armour"]) != 0:
         print("You hope your armour will defend you as you run to door")
         inventory["Rusty Armour"] = inventory["Rusty Armour"] - 1
