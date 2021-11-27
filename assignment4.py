@@ -15,7 +15,8 @@ def main():
     (1,"The room is empty with a door on the other side.",empty),
     (2,"The room opens out to the outside and there is a door to another room.",outside),
     (3,"There is a monster looming over you. You must defeat, or evade it to get to the door you can see past its hulking body.",monster),
-    (4,"The room is empty save a closed chest between you and the door across the room",chest)])
+    (4,"The room is empty save a closed chest between you and the door across the room",chest),
+    (5,"Three plinths lie before you each with an item on top.",choose)])
     
     current_room = 0
     room_count = 0
@@ -29,7 +30,7 @@ def enter(rooms, items, inventory, current_room, room_count):
 
 def change_room(rooms, items, inventory, current_room, room_count):
     
-    new_room = random.randint(1, 4)
+    new_room = random.randint(1, (len(rooms) - 1))
     current_room = new_room
     enter(rooms, items, inventory, current_room, room_count)
 
@@ -106,15 +107,8 @@ def chest(rooms, items, inventory, current_room, room_count):
             
             get_item(rooms, items, inventory, current_room, room_count)
             
-            while True:
-                ans = input("Do you want to go through the door.[y/n]:")
-                if ans == "y":
-                    current_room = change_room(rooms, items, inventory, current_room, room_count)
-                    break
-                elif ans == "n":
-                    print("You plan on staying here till you starve?.")
-                else:
-                    print("You must type y or n.")
+            ans = input("Do you want to go through the door.[y/n]:")
+            ref_door(rooms, items, inventory, current_room, room_count, ans)
         else:
             print("You must type d or c.")    
                 
@@ -146,7 +140,8 @@ def monster(rooms, items, inventory, current_room, room_count):
             option = input("Would you like to fight the monster or make a run for the door. [f/d]:")
             if option == "f":
                 inventory["Rusty Sword"] = inventory["Rusty Sword"] - 1
-                print("Your trusty rusty sword betrays you , breaking on first contact with the monster. Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
+                print("Your trusty rusty sword betrays you, breaking on first contact with the monster.\
+ Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
                 
                 while True:
                     ans = input("Do you want to go through the door.[y/n]:")
@@ -155,9 +150,11 @@ def monster(rooms, items, inventory, current_room, room_count):
                         break
                     elif ans != "n":
                         print("You must type y or n.")
+            
             elif option == "d":
                 inventory["Rusty Armour"] = inventory["Rusty Armour"] - 1
-                print("You make a break for the door, the monster reaches towards you as you pass geting a hit in, your trusty armour breaks on first contact with the monster. Luckily the armour defends you enough that you make it to the door.")
+                print("You make a break for the door, the monster reaches towards you as you pass geting a hit in, your trusty armour breaks on first contact with the monster.\
+ Luckily the armour defends you enough that you make it to the door.")
                 current_room = change_room(rooms, items, inventory, current_room, room_count)
             else:
                 print("You must type f or d.")
@@ -165,7 +162,8 @@ def monster(rooms, items, inventory, current_room, room_count):
     elif int(inventory["Rusty Sword"]) != 0 and int(inventory["Rusty Armour"]) == 0:
         print("You can use your sword to fight the monster")
         inventory["Rusty Sword"] = inventory["Rusty Sword"] - 1
-        print("Your trusty rusty sword betrays you , breaking on first contact with the monster. Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
+        print("Your trusty rusty sword betrays you , breaking on first contact with the monster.\
+ Luckily the blade does enough damage to injure it enough that you can leave or finish it at leasure.")
         
         while True:
             ans = input("Do you want to go through the door.[y/n]:")
@@ -173,17 +171,87 @@ def monster(rooms, items, inventory, current_room, room_count):
                 current_room = change_room(rooms, items, inventory, current_room, room_count)
                 break
             elif ans == "n":
-                print("Why, what are you planing on in here?. The monster isn't dead you know.")
+                print("Why, what are you planing on here?. The monster isn't dead you know.")
             else:             
                 print("You must type y or n.")
     
     elif int(inventory["Rusty Sword"]) == 0 and int(inventory["Rusty Armour"]) != 0:
         print("You hope your armour will defend you as you run to door")
         inventory["Rusty Armour"] = inventory["Rusty Armour"] - 1
-        print("You make a break for the door, the monster reaches towards you as you pass geting a hit in, your trusty armour breaks on first contact with the monster. Luckily the armour defends you enough that you make it to the door.")
+        print("You make a break for the door, the monster reaches towards you as you pass geting a hit in, your trusty armour breaks on first contact with the monster.\
+ Luckily the armour defends you enough that you make it to the door.")
         current_room = change_room(rooms, items, inventory, current_room, room_count)
                     
+def choose(rooms, items, inventory, current_room, room_count):
+    
+    while True:
+        ans = input("Do you want to take one. [y/n]:")
+        if ans == "y":
+            trap = random.randint(1, 100)
+            
+            if trap == 1:
+                print("The plinth was trapped. The room fills with water, you try to swim to the top but you hit the ceiling.\
+ Changing tactic you head towards the door which turns out to be locked.\
+ You bang against the door in futility untill you can no longer help but gasp for breath. Water fills your lungs. You drown.")
+                leave(rooms, items, inventory, current_room, room_count)
+            elif trap < 80:
+                 print("The plinths slide into the floor.")
+                 get_item(rooms, items, inventory, current_room, room_count)
+                 ref_door(rooms, items, inventory, current_room, room_count, ans)
+            elif trap >= 80:
+                get_item(rooms, items, inventory, current_room, room_count)
+                ans = input("Do you want to take another one. [y/n]:")
+                if ans == "y":
+                    trap = random.randint(1, 100)
 
+                    if trap < 20:
+                        print("The plinth was trapped. The room fills with water, you try to swim to the top but you hit the ceiling.\
+ Changing tactic you head towards the door which turns out to be locked.\
+ You bang against the door in futility untill you can no longer help but gasp for breath. Water fills your lungs. You drown.")
+                        leave(rooms, items, inventory, current_room, room_count)
+                    elif trap < 90:
+                        print("The plinths slide into the floor.")
+                        get_item(rooms, items, inventory, current_room, room_count)
+                        ref_door(rooms, items, inventory, current_room, room_count, ans)
+                    elif trap >= 20:
+                        get_item(rooms, items, inventory, current_room, room_count)
+                        ans = input("Do you want to take another one. [y/n]:")
+                        if ans == "y":
+                            trap = random.randint(1, 100)
+                            if trap <= 50:
+                                print("The plinth was trapped. The room fills with water, you try to swim to the top but you hit the ceiling.\
+ Changing tactic you head towards the door which turns out to be locked.\
+ You bang against the door in futility untill you can no longer help but gasp for breath. Water fills your lungs. You drown.")
+                                leave(rooms, items, inventory, current_room, room_count)
+                            elif trap > 50:
+                                get_item(rooms, items, inventory, current_room, room_count)
+                                ref_door(rooms, items, inventory, current_room, room_count, ans)
+                        
+                        if ans == "n":
+                            ref_door(rooms, items, inventory, current_room, room_count, ans)
+                        
+                if ans == "n":
+                    ref_door(rooms, items, inventory, current_room, room_count, ans)
+           
+        if ans == "n":
+            ref_door(rooms, items, inventory, current_room, room_count, ans)
 
+def ref_door(rooms, items, inventory, current_room, room_count, ans):
+    
+    if ans == "n":
+   
+        while True:
+            ans = input("Do you want to go through the door.[y/n]:")
+            if ans == "y":
+                current_room = change_room(rooms, items, inventory, current_room, room_count)
+            elif ans == "n":
+                print("You plan on staying here till you starve?")
+            else:
+                print("You must type y or n.")
+    elif ans == "y":
+        print("You leave into the next room.")
+        current_room = change_room(rooms, items, inventory, current_room, room_count)
+    else:
+        print("You must type y or n.")
     
 main()
